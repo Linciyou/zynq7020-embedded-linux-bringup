@@ -1,0 +1,307 @@
+
+
+U-Boot 2026.01 (Jul 29 2026 - 22:30:15 +0800)
+
+CPU:   Zynq 7z020
+Silicon: v3.1
+Model: Xilinx ZC702 board
+DRAM:  ECC disabled 1 GiB
+Core:  34 devices, 22 uclasses, devicetree: board
+Flash: 0 Bytes
+NAND:  0 MiB
+MMC:   mmc@e0100000: 0
+Loading Environment from SPIFlash... SF: Detected w25q256 with page size 256 Bytes, erase size 64 KiB, total 32 MiB
+*** Warning - bad CRC, using default environment
+
+In:    serial@e0001000
+Out:   serial@e0001000
+Err:   serial@e0001000
+Net:   Could not get PHY for eth0: addr 7
+No ethernet found.
+
+Hit any key to stop autoboot:  2 Hit any key to stop autoboot: 1[KHit any key to stop autoboot: 0[K
+SF: Detected w25q256 with page size 256 Bytes, erase size 64 KiB, total 32 MiB
+device 0 offset 0xfc0000, size 0x40000
+SF: 262144 bytes @ 0xfc0000 Read: OK
+QSPI: Trying to boot script at 3000000
+## Executing script at 03000000
+Wrong image format for "source" command
+QSPI: SCRIPT FAILED: continuing...
+JTAG: Trying to boot script at 3000000
+## Executing script at 03000000
+Wrong image format for "source" command
+JTAG: SCRIPT FAILED: continuing...
+switch to partitions #0, OK
+mmc0 is current device
+Scanning mmc 0:1...
+Found U-Boot script /boot.scr
+713 bytes read in 8 ms (86.9 KiB/s)
+## Executing script at 03000000
+5480024 bytes read in 310 ms (16.9 MiB/s)
+4650898 bytes read in 270 ms (16.4 MiB/s)
+17567 bytes read in 14 ms (1.2 MiB/s)
+SD_BOOT_512M
+Kernel image @ 0x2000000 [ 0x000000 - 0x539e58 ]
+## Flattened Device Tree blob at 07000000
+   Booting using the fdt blob at 0x7000000
+Working FDT set to 7000000
+   Loading Ramdisk to 0fb90000, end 0ffff792 ... OK
+   Loading Device Tree to 0fb88000, end 0fb8f49e ... OK
+Working FDT set to fb88000
+
+Starting kernel ...
+
+Booting Linux on physical CPU 0x0
+Linux version 6.18.10-xilinx (builder@DESKTOP-0SOBQ8I) (arm-linux-gcc.br_real (Buildroot 2021.11-18033-g83947c7bb6) 14.3.0, GNU ld (GNU Binutils) 2.43.1) #3 SMP PREEMPT Mon Nov  9 21:03:10 CST 2026
+CPU: ARMv7 Processor [413fc090] revision 0 (ARMv7), cr=18c5387d
+CPU: PIPT / VIPT nonaliasing data cache, VIPT aliasing instruction cache
+OF: fdt: Machine model: Zynq-7020 Embedded Linux bring-up board
+Memory policy: Data cache writealloc
+cma: Reserved 16 MiB at 0x1f000000
+Zone ranges:
+  Normal   [mem 0x0000000000000000-0x000000001fffffff]
+  HighMem  empty
+Movable zone start for each node
+Early memory node ranges
+  node   0: [mem 0x0000000000000000-0x000000001fffffff]
+Initmem setup node 0 [mem 0x0000000000000000-0x000000001fffffff]
+OF: reserved mem: Reserved memory: No reserved-memory node in the DT
+percpu: Embedded 13 pages/cpu s21516 r8192 d23540 u53248
+pcpu-alloc: s21516 r8192 d23540 u53248 alloc=13*4096
+pcpu-alloc: [0] 0 [0] 1 
+Kernel command line: console=ttyPS0,115200 rdinit=/init loglevel=8
+printk: log buffer data + meta data: 16384 + 51200 = 67584 bytes
+Dentry cache hash table entries: 65536 (order: 6, 262144 bytes, linear)
+Inode-cache hash table entries: 32768 (order: 5, 131072 bytes, linear)
+Built 1 zonelists, mobility grouping on.  Total pages: 131072
+mem auto-init: stack:all(zero), heap alloc:off, heap free:off
+SLUB: HWalign=32, Order=0-3, MinObjects=0, CPUs=2, Nodes=1
+rcu: Preemptible hierarchical RCU implementation.
+rcu: 	RCU event tracing is enabled.
+rcu: 	RCU restricting CPUs from NR_CPUS=4 to nr_cpu_ids=2.
+rcu: RCU calculated value of scheduler-enlistment delay is 10 jiffies.
+rcu: Adjusting geometry for rcu_fanout_leaf=16, nr_cpu_ids=2
+NR_IRQS: 16, nr_irqs: 16, preallocated irqs: 16
+efuse mapped to (ptrval)
+slcr mapped to (ptrval)
+GIC physical location is 0xf8f01000
+L2C: platform modifies aux control register: 0x72360000 -> 0x72760000
+L2C: DT/platform modifies aux control register: 0x72360000 -> 0x72760000
+L2C-310 erratum 769419 enabled
+L2C-310 enabling early BRESP for Cortex-A9
+L2C-310 full line of zeros enabled for Cortex-A9
+L2C-310 ID prefetch enabled, offset 1 lines
+L2C-310 dynamic clock gating enabled, standby mode enabled
+L2C-310 cache controller enabled, 8 ways, 512 kB
+L2C-310: CACHE_ID 0x410000c8, AUX_CTRL 0x76760001
+rcu: srcu_init: Setting srcu_struct sizes based on contention.
+zynq_clock_init: clkc starts at (ptrval)
+Zynq clock init
+sched_clock: 64 bits at 167MHz, resolution 6ns, wraps every 4398046511103ns
+clocksource: arm_global_timer: mask: 0xffffffffffffffff max_cycles: 0x26703d7dd8, max_idle_ns: 440795208065 ns
+Switching to timer-based delay loop, resolution 6ns
+Console: colour dummy device 80x30
+Calibrating delay loop (skipped), value calculated using timer frequency.. 333.33 BogoMIPS (lpj=1666666)
+CPU: Testing write buffer coherency: ok
+CPU0: Spectre v2: using BPIALL workaround
+pid_max: default: 32768 minimum: 301
+Mount-cache hash table entries: 1024 (order: 0, 4096 bytes, linear)
+Mountpoint-cache hash table entries: 1024 (order: 0, 4096 bytes, linear)
+CPU0: thread -1, cpu 0, socket 0, mpidr 80000000
+cacheinfo: Unable to detect cache hierarchy for CPU 0
+Setting up static identity map for 0x100000 - 0x100060
+rcu: Hierarchical SRCU implementation.
+rcu: 	Max phase no-delay instances is 1000.
+Timer migration: 1 hierarchy levels; 8 children per group; 1 crossnode level
+smp: Bringing up secondary CPUs ...
+CPU1: thread -1, cpu 1, socket 0, mpidr 80000001
+CPU1: Spectre v2: using BPIALL workaround
+smp: Brought up 1 node, 2 CPUs
+SMP: Total of 2 processors activated (666.66 BogoMIPS).
+CPU: All CPU(s) started in SVC mode.
+Memory: 484068K/524288K available (7168K kernel code, 246K rwdata, 2864K rodata, 1024K init, 114K bss, 22436K reserved, 16384K cma-reserved, 0K highmem)
+devtmpfs: initialized
+VFP support v0.3: implementor 41 architecture 3 part 30 variant 9 rev 4
+clocksource: jiffies: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 19112604462750000 ns
+posixtimers hash table entries: 1024 (order: 1, 8192 bytes, linear)
+futex hash table entries: 512 (32768 bytes on 1 NUMA nodes, total 32 KiB, linear).
+pinctrl core: initialized pinctrl subsystem
+NET: Registered PF_NETLINK/PF_ROUTE protocol family
+DMA: preallocated 256 KiB pool for atomic coherent allocations
+thermal_sys: Registered thermal governor 'step_wise'
+cpuidle: using governor menu
+/axi/etb@f8801000: Fixed dependency cycle(s) with /replicator
+/axi/tpiu@f8803000: Fixed dependency cycle(s) with /replicator
+/axi/funnel@f8804000: Fixed dependency cycle(s) with /axi/ptm@f889d000
+/axi/funnel@f8804000: Fixed dependency cycle(s) with /axi/ptm@f889c000
+/axi/funnel@f8804000: Fixed dependency cycle(s) with /replicator
+/axi/ptm@f889c000: Fixed dependency cycle(s) with /axi/funnel@f8804000
+/axi/ptm@f889d000: Fixed dependency cycle(s) with /axi/funnel@f8804000
+/replicator: Fixed dependency cycle(s) with /axi/etb@f8801000
+/axi/etb@f8801000: Fixed dependency cycle(s) with /replicator
+/replicator: Fixed dependency cycle(s) with /axi/tpiu@f8803000
+/axi/tpiu@f8803000: Fixed dependency cycle(s) with /replicator
+/replicator: Fixed dependency cycle(s) with /axi/funnel@f8804000
+/axi/funnel@f8804000: Fixed dependency cycle(s) with /axi/ptm@f889d000
+/axi/funnel@f8804000: Fixed dependency cycle(s) with /axi/ptm@f889c000
+/axi/funnel@f8804000: Fixed dependency cycle(s) with /replicator
+/axi/funnel@f8804000: Fixed dependency cycle(s) with /axi/ptm@f889c000
+/axi/ptm@f889c000: Fixed dependency cycle(s) with /axi/funnel@f8804000
+/axi/funnel@f8804000: Fixed dependency cycle(s) with /axi/ptm@f889d000
+/axi/ptm@f889d000: Fixed dependency cycle(s) with /axi/funnel@f8804000
+hw-breakpoint: found 5 (+1 reserved) breakpoint and 1 watchpoint registers.
+hw-breakpoint: maximum watchpoint size is 4 bytes.
+e0001000.serial: ttyPS0 at MMIO 0xe0001000 (irq = 26, base_baud = 6249999) is a xuartps
+printk: legacy console [ttyPS0] enabled
+SCSI subsystem initialized
+usbcore: registered new interface driver usbfs
+usbcore: registered new interface driver hub
+usbcore: registered new device driver usb
+mc: Linux media interface: v0.10
+videodev: Linux video capture interface: v2.00
+pps_core: LinuxPPS API ver. 1 registered
+pps_core: Software ver. 5.3.6 - Copyright 2005-2007 Rodolfo Giometti <giometti@linux.it>
+PTP clock support registered
+EDAC MC: Ver: 3.0.0
+FPGA manager framework
+Advanced Linux Sound Architecture Driver Initialized.
+vgaarb: loaded
+clocksource: Switched to clocksource arm_global_timer
+NET: Registered PF_INET protocol family
+IP idents hash table entries: 8192 (order: 4, 65536 bytes, linear)
+tcp_listen_portaddr_hash hash table entries: 512 (order: 0, 4096 bytes, linear)
+Table-perturb hash table entries: 65536 (order: 6, 262144 bytes, linear)
+TCP established hash table entries: 4096 (order: 2, 16384 bytes, linear)
+TCP bind hash table entries: 4096 (order: 4, 65536 bytes, linear)
+TCP: Hash tables configured (established 4096 bind 4096)
+UDP hash table entries: 256 (order: 2, 14336 bytes, linear)
+UDP-Lite hash table entries: 256 (order: 2, 14336 bytes, linear)
+NET: Registered PF_UNIX/PF_LOCAL protocol family
+RPC: Registered named UNIX socket transport module.
+RPC: Registered udp transport module.
+RPC: Registered tcp transport module.
+RPC: Registered tcp-with-tls transport module.
+RPC: Registered tcp NFSv4.1 backchannel transport module.
+PCI: CLS 0 bytes, default 64
+Trying to unpack rootfs image as initramfs...
+workingset: timestamp_bits=30 max_order=17 bucket_order=0
+jffs2: version 2.2. (NAND) (SUMMARY)  ?? 2001-2006 Red Hat, Inc.
+io scheduler mq-deadline registered
+io scheduler kyber registered
+io scheduler bfq registered
+zynq-pinctrl 700.pinctrl: zynq pinctrl initialized
+Freeing initrd memory: 4544K
+ledtrig-cpu: registered to indicate activity on CPUs
+dma-pl330 f8003000.dma-controller: Loaded driver for PL330 DMAC-241330
+dma-pl330 f8003000.dma-controller: 	DBUFF-128x8bytes Num_Chans-8 Num_Peri-4 Num_Events-16
+brd: module loaded
+loop: module loaded
+spi-nor spi0.0: supply vcc not found, using dummy regulator
+spi-nor spi0.0: failed to read ear reg
+2 fixed-partitions partitions found on MTD device spi0.0
+Creating 2 MTD partitions on "spi0.0":
+0x000000000000-0x000000600000 : "qspi-boot"
+0x000000600000-0x000002000000 : "qspi-data"
+CAN device driver interface
+macb e000b000.ethernet eth0: Cadence GEM rev 0x00020118 at 0xe000b000 irq 39 (02:00:00:70:20:01)
+e1000e: Intel(R) PRO/1000 Network Driver
+e1000e: Copyright(c) 1999 - 2015 Intel Corporation.
+usbcore: registered new interface driver usb-storage
+ci_hdrc ci_hdrc.0: unable to init phy: -110
+ci_hdrc ci_hdrc.0: probe with driver ci_hdrc failed with error -110
+i2c_dev: i2c /dev entries driver
+i2c i2c-0: using pinctrl states for GPIO recovery
+i2c i2c-0: using generic GPIOs for recovery
+cdns-i2c e0004000.i2c: 400 kHz mmio e0004000 irq 40
+pca954x 0-0074: supply vdd not found, using dummy regulator
+pca954x 0-0074: probe failed
+cdns-wdt f8005000.watchdog: Xilinx Watchdog Timer with timeout 10s
+EDAC MC: ECC not enabled
+Xilinx Zynq CpuIdle Driver started
+sdhci: Secure Digital Host Controller Interface driver
+sdhci: Copyright(c) Pierre Ossman
+sdhci-pltfm: SDHCI platform and OF driver helper
+clocksource: ttc_clocksource: mask: 0xffff max_cycles: 0xffff, max_idle_ns: 537538477 ns
+timer #0 at (ptrval), irq=42
+usbcore: registered new interface driver usbhid
+usbhid: USB HID core driver
+armv7-pmu f8891000.pmu: hw perfevents: no interrupt-affinity property, guessing.
+hw perfevents: enabled with armv7_cortex_a9 PMU driver, 7 (8000003f) counters available
+mmc0: SDHCI controller on e0100000.mmc [e0100000.mmc] using ADMA
+fpga_manager fpga0: Xilinx Zynq FPGA Manager registered
+NET: Registered PF_INET6 protocol family
+Segment Routing with IPv6
+In-situ OAM (IOAM) with IPv6
+sit: IPv6, IPv4 and MPLS over IPv4 tunneling driver
+NET: Registered PF_PACKET protocol family
+can: controller area network core
+NET: Registered PF_CAN protocol family
+can: raw protocol
+can: broadcast manager protocol
+can: netlink gateway - max_hops=1
+Registering SWP/SWPB emulation handler
+mmc0: new high speed SDHC card at address aaaa
+mmcblk0: mmc0:aaaa SC16G 14.8 GiB
+ mmcblk0: p1
+of-fpga-region fpga-region: FPGA Region probed
+input: gpio-keys as /devices/soc0/gpio-keys/input/input0
+of_cfs_init
+of_cfs_init: OK
+clk: Disabling unused clocks
+ALSA device list:
+  No soundcards found.
+Freeing unused kernel image (initmem) memory: 1024K
+Run /init as init process
+  with arguments:
+    /init
+  with environment:
+    HOME=/
+    TERM=linux
+Saving 256 bits of non-creditable seed for next boot
+Starting syslogd: OK
+Starting klogd: OK
+Running sysctl: OK
+Starting network: OK
+macb e000b000.ethernet eth0: PHY [e000b000.ethernet-ffffffff:01] driver [RTL8211E Gigabit Ethernet] (irq=POLL)
+macb e000b000.ethernet eth0: configuring for phy/gmii link mode
+macb e000b000.ethernet eth0: Link is Up - 1Gbps/Full - flow control rx/tx
+udhcpc: started, v1.38.0
+udhcpc: broadcasting discover
+udhcpc: broadcasting discover
+udhcpc: broadcasting discover
+udhcpc: no lease, failing
+ETHERNET_ADDRESS: no DHCP lease; applying direct-link fallback
+eth0      Link encap:Ethernet  HWaddr 02:00:00:70:20:01  
+          inet addr:192.168.7.2  Bcast:192.168.7.255  Mask:255.255.255.0
+          inet6 addr: fe80::ff:fe70:2001/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:1 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:10 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000 
+          RX bytes:268 (268.0 B)  TX bytes:1652 (1.6 KiB)
+          Interrupt:39 Base address:0xb000 
+
+Kernel IP routing table
+Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
+0.0.0.0         192.168.7.1     0.0.0.0         UG    0      0        0 eth0
+192.168.7.0     0.0.0.0         255.255.255.0   U     0      0        0 eth0
+Starting crond: OK
+
+Welcome to Buildroot
+buildroot login: root
+# id; bash --version | head -n 1; cat /sys/class/net/eth0/speed; ping -c 3 -W 2 
+192.168.7.1; printf '\nMEDIA_%s\n' PROBE_DONE
+uid=0(root) gid=0(root) groups=0(root),10(wheel)
+GNU bash, version 5.2.37(1)-release (arm-buildroot-linux-gnueabihf)
+1000
+PING 192.168.7.1 (192.168.7.1): 56 data bytes
+64 bytes from 192.168.7.1: seq=0 ttl=128 time=0.852 ms
+64 bytes from 192.168.7.1: seq=1 ttl=128 time=0.621 ms
+64 bytes from 192.168.7.1: seq=2 ttl=128 time=0.658 ms
+
+--- 192.168.7.1 ping statistics ---
+3 packets transmitted, 3 packets received, 0% packet loss
+round-trip min/avg/max = 0.621/0.710/0.852 ms
+
+MEDIA_PROBE_DONE
+# 

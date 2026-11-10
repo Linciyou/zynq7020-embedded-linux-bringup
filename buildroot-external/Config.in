@@ -1,7 +1,2 @@
-menu "Zynq-7020 FPGA + Embedded Linux packages"
-source "$BR2_EXTERNAL_ZYNQ7020_PATH/package/fft-dma-uapi/Config.in"
-source "$BR2_EXTERNAL_ZYNQ7020_PATH/package/fft-dma-driver/Config.in"
-source "$BR2_EXTERNAL_ZYNQ7020_PATH/package/fft-dma-bench/Config.in"
-source "$BR2_EXTERNAL_ZYNQ7020_PATH/package/fft-dma-test/Config.in"
-source "$BR2_EXTERNAL_ZYNQ7020_PATH/package/fft-ethernet-server/Config.in"
+menu "Zynq-7020 bring-up packages"
 endmenu

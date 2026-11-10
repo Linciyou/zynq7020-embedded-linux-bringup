@@ -1,4 +1,0 @@
-config BR2_PACKAGE_FFT_DMA_UAPI
-	bool
-	help
-	  Shared ioctl ABI for the FFT DMA kernel driver and user-space clients.

@@ -1,24 +1,35 @@
 #!/bin/sh
 
-# Prefer DHCP for a router or Internet Connection Sharing. Keep the static
-# address as a fallback so the isolated PC-to-board DMA test remains usable.
 case "$1" in
     start)
         count=0
         while ! /bin/busybox ip link show dev eth0 >/dev/null 2>&1; do
             count=$((count + 1))
-            [ "$count" -ge 200 ] && exit 1
+            [ "$count" -ge 200 ] && exit 0
             sleep 0.1
         done
 
         /bin/busybox ip link set dev eth0 up || exit 1
-        if /sbin/udhcpc -i eth0 -n -q -t 3 -T 3 >/dev/console 2>&1; then
-            exit 0
+        count=0
+        while [ "$(cat /sys/class/net/eth0/carrier 2>/dev/null)" != 1 ] && [ "$count" -lt 15 ]; do
+            count=$((count + 1))
+            sleep 1
+        done
+        if [ "$(cat /sys/class/net/eth0/carrier 2>/dev/null)" = 1 ] &&
+            /sbin/udhcpc -i eth0 -n -q -t 3 -T 3 >/dev/console 2>&1; then
+            echo "ETHERNET_DHCP: PASS" >/dev/console
+        else
+            echo "ETHERNET_ADDRESS: no DHCP lease; applying direct-link fallback" >/dev/console
+            /bin/busybox ifconfig eth0 192.168.7.2 netmask 255.255.255.0 up || exit 1
+            /bin/busybox ip route replace default via 192.168.7.1 dev eth0 || exit 1
+            printf '%s\n' 'nameserver 1.1.1.1' > /etc/resolv.conf
         fi
 
-        /bin/busybox ifconfig eth0 192.168.7.2 netmask 255.255.255.0 up || exit 1
-        # The PC USB Ethernet adapter is the NAT gateway for direct-link mode.
-        /bin/busybox ip route replace default via 192.168.7.1 dev eth0 || exit 1
-        printf '%s\n' 'nameserver 1.1.1.1' > /etc/resolv.conf
+        /bin/busybox ifconfig eth0 >/dev/console 2>&1
+        /bin/busybox route -n >/dev/console 2>&1
+        # Public Internet/DNS checks belong to the UART validation session,
+        # not interface setup: a direct PC cable may have no router or NAT.
         ;;
 esac
+
+exit 0

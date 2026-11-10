@@ -1,5 +1,0 @@
-config BR2_PACKAGE_FFT_DMA_TEST
-	bool "fft-dma-test"
-	depends on BR2_PACKAGE_FFT_DMA_DRIVER
-	help
-	  Userspace ioctl validation for the simulated 100 MSPS FFT input.

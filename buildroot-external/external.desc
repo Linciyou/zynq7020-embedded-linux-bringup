@@ -1,2 +1,2 @@
 name: ZYNQ7020
-desc: Buildroot support for the Zynq-7020 FPGA and Embedded Linux FFT accelerator
+desc: Buildroot support for Zynq-7020 Embedded Linux bring-up

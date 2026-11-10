@@ -1,8 +1,0 @@
-#!/bin/sh
-
-case "$1" in
-    start)
-        /bin/busybox pidof fft_ethernet_server >/dev/null 2>&1 && exit 0
-        /usr/sbin/fft_ethernet_server &
-        ;;
-esac

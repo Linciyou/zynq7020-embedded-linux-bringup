@@ -1,7 +1,7 @@
 # Build the FSBL used by the QSPI production boot image.
 set root_dir [file normalize [file join [file dirname [info script]] .. ..]]
 set workspace_dir [file join $root_dir build vitis_zynq]
-set xsa_file [file join $root_dir build vivado zynq7020_fft_linux zynq7020_fft_linux.xsa]
+set xsa_file [file join $root_dir build vivado zynq7020_bringup zynq7020_bringup.xsa]
 
 if {![file exists $xsa_file]} {
     error "XSA not found: $xsa_file"
@@ -36,6 +36,9 @@ set toolchain_bin [file join $tools_root Vitis gnu aarch32 nt gcc-arm-none-eabi 
 set gnuwin_bin [file join $tools_root Vitis gnuwin bin]
 set make_bin [file join $gnuwin_bin make.exe]
 set env(PATH) "$toolchain_bin;$gnuwin_bin;$env(PATH)"
+set hooks_file [file join $root_dir hardware fsbl fsbl_hooks.c]
+if {![file exists $hooks_file]} { error "Board FSBL hooks not found: $hooks_file" }
+file copy -force $hooks_file [file join $fsbl_dir fsbl_hooks.c]
 puts [exec $make_bin -C [file join $fsbl_dir zynq_fsbl_bsp] 2>@1]
 puts [exec $make_bin -C $fsbl_dir -j 4 2>@1]
 

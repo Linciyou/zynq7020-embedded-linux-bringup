@@ -33,6 +33,7 @@ uRamdisk
 /.codex/
 *.pdf
 dfx_runtime.txt
+clockInfo.txt
 
 # Host editor and operating-system files
 .vscode/

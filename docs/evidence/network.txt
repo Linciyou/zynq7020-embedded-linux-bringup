@@ -1,0 +1,33 @@
+ping -c 5 -W 2 1.1.1.1; nslookup example.com; cat /sys/class/net/eth0/statisti
+cs/rx_errors; cat /sys/class/net/eth0/statistics/tx_errors; rc=$?; printf '\nUAR
+T_DONE_%s:%s\n' 'd9c5282f89004410906a05eefc5a0bf5' "$rc"
+PING 1.1.1.1 (1.1.1.1): 56 data bytes
+64 bytes from 1.1.1.1: seq=0 ttl=54 time=11.389 ms
+64 bytes from 1.1.1.1: seq=1 ttl=54 time=7.927 ms
+64 bytes from 1.1.1.1: seq=2 ttl=54 time=9.005 ms
+64 bytes from 1.1.1.1: seq=3 ttl=54 time=9.165 ms
+64 bytes from 1.1.1.1: seq=4 ttl=54 time=10.272 ms
+
+--- 1.1.1.1 ping statistics ---
+5 packets transmitted, 5 packets received, 0% packet loss
+round-trip min/avg/max = 7.927/9.551/11.389 ms
+Server:		1.1.1.1
+Address:	1.1.1.1:53
+
+Non-authoritative answer:
+Name:	example.com
+Address: 104.20.23.154
+Name:	example.com
+Address: 172.66.147.243
+
+Non-authoritative answer:
+Name:	example.com
+Address: 2606:4700:10::ac42:93f3
+Name:	example.com
+Address: 2606:4700:10::6814:179a
+
+0
+0
+
+UART_DONE_d9c5282f89004410906a05eefc5a0bf5:0
+# 
