@@ -68,4 +68,4 @@ Generated builds and flash backups stay local. QSPI packaging requires the prese
 
 The root filesystem runs from initramfs, so runtime changes are not persistent. The image has no SSH server and uses a lab MAC address and root login without a password; it is for an isolated test link, not direct deployment. U-Boot retains its original ZC702 defaults and network warnings; Linux networking is the validated path. PHY strap/reset wiring discrepancies, repeated cold boots and 24-hour operation remain open in the validation record.
 
-The original FFT/DMA project remains on `main`; `bringup-jtag-only` contains this board bring-up project.
+`main` contains this board bring-up project. The original FFT/DMA project is preserved on [`archive/fft-dma`](https://github.com/Linciyou/zynq7020-embedded-linux-bringup/tree/archive/fft-dma).
