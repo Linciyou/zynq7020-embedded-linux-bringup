@@ -1,4 +1,0 @@
-# eth0 is configured by /etc/init.d/S41ethernet. It uses DHCP when available
-# and falls back to the point-to-point development address otherwise.
-auto lo
-iface lo inet loopback

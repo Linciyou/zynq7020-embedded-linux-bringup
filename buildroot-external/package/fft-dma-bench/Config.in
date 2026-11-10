@@ -1,5 +1,0 @@
-config BR2_PACKAGE_FFT_DMA_BENCH
-	bool "fft-dma-bench"
-	depends on BR2_PACKAGE_FFT_DMA_DRIVER
-	help
-	  DMAengine latency, throughput, and repeated-transfer stress test.

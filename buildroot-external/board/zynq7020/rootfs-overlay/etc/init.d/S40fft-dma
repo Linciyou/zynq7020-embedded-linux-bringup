@@ -1,7 +1,0 @@
-#!/bin/sh
-
-case "$1" in
-    start)
-        /sbin/modprobe fft_dma_drv
-        ;;
-esac

@@ -1,7 +1,0 @@
-config BR2_PACKAGE_FFT_ETHERNET_SERVER
-	bool "fft-ethernet-server"
-	depends on BR2_USE_MMU
-	depends on BR2_PACKAGE_FFT_DMA_DRIVER
-	depends on BR2_PACKAGE_FFT_DMA_BENCH
-	help
-	  Direct Ethernet TCP endpoint for the FFT DMA driver.

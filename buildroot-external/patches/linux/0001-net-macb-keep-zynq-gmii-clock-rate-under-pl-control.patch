@@ -1,0 +1,39 @@
+From: Zynq bring-up project
+Subject: [PATCH] net: macb: leave Zynq GMII transmit clock rate to PL
+
+On Zynq-7000 the GMII transmit clock enters the PS through EMIO.
+The GMII-to-RGMII bridge generates and selects it according to the PHY
+speed. The PS clock handle is still required to keep the GEM gate enabled,
+but its internal divider does not control the external EMIO clock rate.
+
+With an unmodelled PL clock input the Zynq clock driver reports zero Hz.
+Trying to round/set that rate produces misleading warnings at link-up.
+Do not remove tx_clk from DT: unused-clock shutdown then disables the
+GEM gate and traffic stops despite the PHY reporting link-up.
+
+Keep the normal enable/disable lifecycle; skip only rate programming for
+Zynq GMII. Other platforms and interfaces retain their existing behavior.
+
+Upstream-Status: Inappropriate [board bring-up downstream workaround]
+---
+ drivers/net/ethernet/cadence/macb_main.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/ethernet/cadence/macb_main.c
+--- a/drivers/net/ethernet/cadence/macb_main.c
++++ b/drivers/net/ethernet/cadence/macb_main.c
+@@ -528,6 +528,14 @@ static void macb_set_tx_clk(struct macb *bp, int speed)
+ 	if (bp->phy_interface == PHY_INTERFACE_MODE_MII)
+ 		return;
+ 
++	/* Zynq GMII takes its TX clock from PL over EMIO. Keep tx_clk
++	 * enabled for the GEM gate, but leave its rate to the PL bridge.
++	 */
++	if (bp->phy_interface == PHY_INTERFACE_MODE_GMII &&
++	    of_device_is_compatible(bp->pdev->dev.of_node,
++				    "xlnx,zynq-gem"))
++		return;
++
+ 	rate = rgmii_clock(speed);
+ 	if (rate < 0)
+ 		return;

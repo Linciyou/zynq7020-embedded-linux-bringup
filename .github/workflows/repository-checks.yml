@@ -3,7 +3,7 @@ name: Repository checks
 on:
   pull_request:
   push:
-    branches: [main]
+    branches: [main, bringup-jtag-only]
 
 jobs:
   source-checks:
@@ -11,4 +11,4 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Check tracked source files
-        run: ./scripts/check_project.sh
+        run: bash scripts/check_project.sh

@@ -1,65 +1,63 @@
+#Requires -RunAsAdministrator
+[CmdletBinding(SupportsShouldProcess = $true, ConfirmImpact = "High")]
 param(
-    [Parameter(Mandatory = $true)]
-    [int]$DiskNumber,
-    [string]$ImagePath
+    [Parameter(Mandatory = $true)][int]$DiskNumber,
+    [string]$ImagePath,
+    [Parameter(Mandatory = $true)][switch]$ConfirmErase,
+    [string]$ExpectedSerialNumber,
+    [uint64]$ExpectedSizeBytes
 )
 
 $ErrorActionPreference = "Stop"
-if ([string]::IsNullOrWhiteSpace($ImagePath)) {
-    $ImagePath = Join-Path $PSScriptRoot "..\build\linux_images\sdcard.img"
-}
-$transcriptPath = Join-Path $PSScriptRoot "..\build\sd_write.log"
-Start-Transcript -LiteralPath $transcriptPath -Force | Out-Null
-trap {
-    Write-Error $_
-    Stop-Transcript | Out-Null
-    exit 1
-}
-
+. (Join-Path $PSScriptRoot 'storage_guard.ps1')
+if (!$ConfirmErase) { throw "Pass -ConfirmErase only for the reviewed target SD card" }
+if (!$ImagePath) { $ImagePath = Join-Path $PSScriptRoot '..\build\linux_images\sdcard.img' }
 $image = Get-Item -LiteralPath $ImagePath
-$disk = Get-Disk -Number $DiskNumber
+$disk = Get-ConfirmedUsbDisk $DiskNumber $ExpectedSerialNumber $ExpectedSizeBytes
+if ($disk.IsOffline -or $disk.IsReadOnly) { throw 'Target disk is offline or read-only' }
+if ($image.Length -lt 512 -or $disk.Size -lt $image.Length -or $image.Length % 512 -ne 0) { throw 'Image size is invalid for this disk' }
+if (!$PSCmdlet.ShouldProcess("\\.\PhysicalDrive$DiskNumber", "Erase SD layout and write $($image.FullName)")) { return }
 
-if ($disk.IsBoot -or $disk.IsSystem -or $disk.BusType -ne "USB") {
-    throw "Refusing to write Disk ${DiskNumber}: it is not a non-system USB disk."
-}
-if ($disk.Size -lt $image.Length) {
-    throw "Disk $DiskNumber is smaller than the image."
-}
-
-$madeOffline = $false
+Start-Transcript -LiteralPath (Join-Path $PSScriptRoot '..\build\sd_write.log') -Force | Out-Null
+$locks = [Collections.Generic.List[IO.FileStream]]::new()
+$source = $null
+$target = $null
 try {
-    if (-not $disk.IsOffline) {
-        try {
-            Set-Disk -Number $DiskNumber -IsOffline $true -ErrorAction Stop
-            $madeOffline = $true
-        }
-        catch {
-            # Windows cannot offline some removable readers. Clearing the
-            # already-validated target releases its mounted partitions.
-            Clear-Disk -Number $DiskNumber -RemoveData -RemoveOEM -Confirm:$false -ErrorAction Stop
-        }
+    # Removable SD media cannot be set offline. Lock every mounted target volume
+    # before dismounting; never force-dismount a volume whose lock failed.
+    $volumes = @(Get-Partition -DiskNumber $DiskNumber | Get-Volume -ErrorAction SilentlyContinue)
+    foreach ($volume in $volumes) {
+        if (!$volume.Path) { continue }
+        $handle = [IO.File]::Open($volume.Path.TrimEnd('\'), 'Open', 'ReadWrite', 'ReadWrite')
+        $locks.Add($handle)
+        [ZynqDiskIO]::Control($handle, 0x00090018)
+        [ZynqDiskIO]::Control($handle, 0x00090020)
     }
-
-    $source = [System.IO.File]::Open($image.FullName, [System.IO.FileMode]::Open, [System.IO.FileAccess]::Read, [System.IO.FileShare]::Read)
-    $target = New-Object System.IO.FileStream("\\.\PhysicalDrive$DiskNumber", [System.IO.FileMode]::Open, [System.IO.FileAccess]::Write, [System.IO.FileShare]::None, 4194304, [System.IO.FileOptions]::WriteThrough)
-    try {
-        $buffer = New-Object byte[] 4194304
-        while (($count = $source.Read($buffer, 0, $buffer.Length)) -gt 0) {
-            $target.Write($buffer, 0, $count)
+    $null = Get-ConfirmedUsbDisk $DiskNumber $disk.SerialNumber $disk.Size
+    Write-Output "Target: Disk $DiskNumber, serial=$($disk.SerialNumber.Trim()), bytes=$($disk.Size)"
+    Write-Output "Image SHA256: $((Get-FileHash -LiteralPath $image.FullName -Algorithm SHA256).Hash)"
+    $source = [IO.File]::OpenRead($image.FullName)
+    $target = [ZynqDiskIO]::OpenDisk("\\.\PhysicalDrive$DiskNumber", $true)
+    $buffer = New-Object byte[] 65536
+    $offset = 0L
+    # Keep the MBR write separate from partition data and every transfer sector-aligned.
+    $count = $source.Read($buffer, 0, 512)
+    if ($count -ne 512) { throw 'Short MBR read' }
+    [ZynqDiskIO]::Write($target, $buffer, $count)
+    $offset += $count
+    while (($count = $source.Read($buffer, 0, $buffer.Length)) -gt 0) {
+        if ($count % 512 -ne 0) { throw "Unaligned source read at $offset" }
+        try { [ZynqDiskIO]::Write($target, $buffer, $count) } catch {
+            throw "SD write failed at offset $offset, count $count : $($_.Exception.InnerException.Message)"
         }
-        $target.Flush($true)
+        $offset += $count
     }
-    finally {
-        if ($target) { $target.Dispose() }
-        if ($source) { $source.Dispose() }
-    }
+    [ZynqDiskIO]::Flush($target)
+    Write-Output "Wrote $($image.Length) bytes to Disk $DiskNumber; run verify_sdcard.ps1 before accepting."
+} finally {
+    if ($target) { $target.Dispose() }
+    if ($source) { $source.Dispose() }
+    foreach ($handle in $locks) { $handle.Dispose() }
+    Stop-Transcript | Out-Null
 }
-finally {
-    if ($madeOffline) {
-        Set-Disk -Number $DiskNumber -IsOffline $false -ErrorAction Stop
-    }
-    Update-Disk -Number $DiskNumber -ErrorAction Stop
-}
-
-Write-Output "Wrote $($image.Length) bytes to Disk $DiskNumber."
-Stop-Transcript | Out-Null
+Update-Disk -Number $DiskNumber -ErrorAction Stop

@@ -1,6 +1,0 @@
-config BR2_PACKAGE_FFT_DMA_DRIVER
-	bool "fft-dma-driver"
-	depends on BR2_LINUX_KERNEL
-	select BR2_PACKAGE_FFT_DMA_UAPI
-	help
-	  Kernel platform driver for the Zynq-7020 AXI DMA FFT accelerator.

@@ -1,9 +1,9 @@
 # Package the FSBL, PL bitstream, and U-Boot for QSPI offset 0.
-# Linux remains on SD and is loaded by U-Boot through extlinux.conf.
+# Linux kernel, DTB and initramfs remain on SD, loaded through boot.scr.
 set root_dir [file normalize [file join [file dirname [info script]] .. ..]]
 set output_dir [file join $root_dir build flash_images]
 set fsbl_file [file join $root_dir build vitis_zynq zynq7020_platform zynq_fsbl fsbl.elf]
-set bit_file [file join $root_dir build vivado zynq7020_fft_linux zynq7020_fft_linux.runs impl_1 system_wrapper.bit]
+set bit_file [file join $root_dir build vivado zynq7020_bringup zynq7020_bringup.runs impl_1 system_wrapper.bit]
 set uboot_file [file join $root_dir build linux_images u-boot.bin]
 set bif_file [file join $output_dir zynq7020_qspi_boot.bif]
 set boot_file [file join $output_dir BOOT_QSPI.bin]
@@ -31,4 +31,7 @@ close $bif_handle
 
 exec $bootgen_file -arch zynq -image $bif_file -w -o $boot_file
 puts "Created QSPI boot image: $boot_file"
-puts "Linux payload remains on SD: uImage, zynq7020-fft.dtb, /dev/mmcblk0p2"
+if {[file size $boot_file] > 0x00600000} {
+    error "QSPI image exceeds the 6 MiB boot partition; do not program it"
+}
+puts "Linux payload remains on SD: zImage, zynq7020-bringup.dtb, rootfs.cpio.gz"

@@ -1,0 +1,112 @@
+/dts-v1/;
+
+#include "xilinx/zynq-zc702.dts"
+#include <dt-bindings/gpio/gpio.h>
+
+/ {
+	model = "Zynq-7020 Embedded Linux bring-up board";
+	compatible = "xlnx,zynq-7020", "xlnx,zynq-7000";
+
+	chosen {
+		bootargs = "console=ttyPS0,115200 rdinit=/init loglevel=8";
+		stdout-path = "serial0:115200n8";
+	};
+
+	memory@0 {
+		device_type = "memory";
+		reg = <0x00000000 0x20000000>;
+	};
+
+	phy_reset_gpio: gpio@41210000 {
+		compatible = "xlnx,xps-gpio-1.00.a";
+		reg = <0x41210000 0x10000>;
+		clocks = <&clkc 15>;
+		gpio-controller;
+		#gpio-cells = <2>;
+		xlnx,all-inputs = <0>;
+		xlnx,all-outputs = <1>;
+		xlnx,dout-default = <0>;
+		xlnx,gpio-width = <1>;
+		xlnx,interrupt-present = <0>;
+		xlnx,is-dual = <0>;
+		xlnx,tri-default = <0>;
+	};
+};
+
+&gem0 {
+	/delete-property/ pinctrl-names;
+	/delete-property/ pinctrl-0;
+	/delete-property/ phy-reset-gpio;
+	/delete-property/ phy-reset-active-low;
+	status = "okay";
+	phy-mode = "gmii";
+	/* Keep the GEM TX gate enabled even though its rate comes from PL.
+	 * The MACB patch skips PS-divider rate changes for Zynq GMII.
+	 */
+	clocks = <&clkc 30>, <&clkc 30>, <&clkc 13>;
+	clock-names = "pclk", "hclk", "tx_clk";
+	/* Lab-only locally administered address; the board has no valid factory MAC. */
+	local-mac-address = [02 00 00 70 20 01];
+	phy-handle = <&ethernet_phy_mdio>;
+	/delete-node/ ethernet-phy@7;
+
+	mdio {
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		ethernet_phy_mdio: ethernet-phy@1 {
+			reg = <1>;
+			reset-gpios = <&phy_reset_gpio 0 GPIO_ACTIVE_LOW>;
+			reset-assert-us = <10000>;
+			reset-deassert-us = <50000>;
+		};
+
+		gmii_to_rgmii: gmii-to-rgmii@8 {
+			compatible = "xlnx,gmii-to-rgmii-1.0";
+			reg = <8>;
+			phy-handle = <&ethernet_phy_mdio>;
+			clocks = <&clkc 16>;
+		};
+	};
+};
+
+&gem1 {
+	status = "disabled";
+};
+
+&sdhci0 {
+	status = "okay";
+	/* The board's MIO47 card-detect polarity differs from the ZC702 base DT. */
+	broken-cd;
+	disable-wp;
+};
+
+&qspi {
+	status = "okay";
+
+	flash@0 {
+		/delete-node/ partitions;
+
+		partitions {
+			compatible = "fixed-partitions";
+			#address-cells = <1>;
+			#size-cells = <1>;
+
+			qspi_boot: partition@0 {
+				label = "qspi-boot";
+				reg = <0x00000000 0x00600000>;
+			};
+
+			qspi_data: partition@600000 {
+				label = "qspi-data";
+				reg = <0x00600000 0x01a00000>;
+			};
+		};
+	};
+};
+
+&uart1 {
+	/delete-property/ pinctrl-names;
+	/delete-property/ pinctrl-0;
+	status = "okay";
+};
